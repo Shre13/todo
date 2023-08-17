@@ -1,0 +1,15 @@
+*{
+    margin:0;
+    padding: 0;
+}
+
+.container{
+    height:100vh;
+    width:100%;
+    background-image: url(file:///C:\Users\Shreya\Downloads\bg.jpg);
+    background-position:center;
+    padding-left:5%;
+    padding-right:5%;
+    box-sizing:border-box;
+    position: relative;
+}
