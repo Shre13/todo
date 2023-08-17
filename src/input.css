@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,3 +6,8 @@
 .radial-blue {
     background: radial-gradient(lightyellow, skyblue)
 }
+=======
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+>>>>>>> 2acd1c1ab3977382350c3b94d262256d66ef4b74
