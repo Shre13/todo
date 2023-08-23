@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO App</title>
+</head>
+<body>
+    <h1>MY TODO APP</h1>
+    <input id="my input" type="text">
+    <ul id="list">
+    </ul>
+    <script>
+        let list=[];
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup',(evt) =>{
+            if(evt.key=="Enter"){
+                list.push(intput.value);
+                input,value='';
+                view();
+            }
+            }
+        });
+        function view(){
+            let container=document.getElementById('list');
+            let items=list.map(item=>{
+                return `<li>${item}</li>`
+            });
+            console.log(items);
+            container.innerHTML = items.join('');
+        }
+    </script>
+    
+</body>
+</html>
