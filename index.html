@@ -1,58 +1,229 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TO DO</title>
-    <link rel="stylesheet" href="../dist/output.css" />
-  </head>
 
-  <body class="max-h-screen bg-slate-50 dark:bg-black dark:text-white">
-    <header class="bg-teal-700 text-white sticky top-0 z-10">
-      <section class="max-w-8xl mx-auto p-4 flex justify-between items-center">
-        <h1 class="text-3xl font-medium">
-          <a href="#hero">📝TO DO LIST</a>
-        </h1>
-        <div>
-          <button
-            id="mobile-open-button"
-            class="text-3xl sm:hidden focus:outline-none"
-          >
-            &#9776;
-          </button>
-          <nav class="hidden sm:block space-x-8 text-xl aria-label='main'">
-            <a href="#testimonials" class="hover:opacity-90">Testimonials</a>
-            <a href="#contacts" class="hover:opacity-90">Contact Us</a>
-          </nav>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos</title>
+    <style>
+        
+        h1 {
+            color: rgb(210, 100, 100);
+            text-align: center;
+            font-size: 50;
+            width: 200%;
+            font-size: 100px;
+            font-weight: 100;
+            text-align: center;
+            margin-top: 50px;
+            margin-left:100%;
+            text-decoration: underline;
+        }
+        
+        body {
+            background-color: rgb(225, 190, 175);
+            width: max-content;
+        }
+        
+        .div1 {
+            background-color: rgb(231, 226, 222);
+            width:max-content;
+            margin-left:150%;
+            font-size: 40px;
+            font-weight: bolder;
+            height:max-content;
+            border: 1px solid rgb(210, 100, 100);
+            border-radius: 25px;
+            align-items:center;
+            box-shadow: 1px 1px 5px 5px rgb(240, 221, 225);
+        }
+        li:hover {
+            background-color:rgb(211, 134, 134);
+            margin-right:20px;
+        }
+        .flex-container {
+            display: flex;
+            padding-top:10%;
+            height: max-content;
+            background-color:rgb(231, 226, 222);
+            border-radius: 25px;
+            
+        }   
+        .flex-container > div{
+            background-color:rgb(231, 226, 222);            
+            padding:23px;
+            width: max-content;
+            align-items: center;
+            height: max-content;
+            border-radius: 25px;
+        }
+        .div2{
+            width:max-content;
+        }
+        input {
+            height:10%;
+            width: 50%;
+            display:block;
+            margin-left:25%;
+            font-size: 30px;
+
+        }
+        
+        ul {
+            list-style-type:disc;
+            text-align: left; 
+            transition: width 2s;
+        }
+        ul li::after{
+            content: "";
+            display: block;
+            margin-left:0%;
+            padding-left: 0%;
+            height: 1px;
+            width: 80%;
+            margin: 20px;
+            background:rgb(178, 145, 119) ;      
+        }
+        button:hover{
+            background-color:rgb(209, 103, 22) ;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>todos</h1>
+    <div class="div1">
+        <p class="div2">
+            <div><input id="myinput" type="text"></div>
+            <div id="myEdit"></div>
+        </p>
+        <ul id="list"></ul>
+        <div class="flex-container">
+            <div><button class="button" id="button" onclick="enter">Enter</button></div>
+            <div><button class="button" id="deletebtn" onclick="del">Delete</button></div>
+            <div><button class="button" id="savebtn">Save</button></div>
+            <div><button class="button" id="clearbtn" onclick="clear">Clear</button></div>
         </div>
-      </section>
-    </header>
-    <main class="max-w-10xl mx-auto">
-        <section id="hero" class="max-h-lg flex flex-col-reverse justify sm:flex-row p-8 items left gap-6 mb-0">
-             <article class="sm:w-1/2">
-                <p class=" text-3xl font-extrabold mt-3 text-center sm:text-1xl sm:text-center text-white dark:text-slate-100">
-                Complete all your work with TO DO!! 😁
-                </p>
-                <h2 class="py-5 max-w-md text-2xl font-bold text-left sm:text-2xl sm:text-left text-white">
-                Enter your <span class="text-green-300">tasks</span> for the day:
-                </h2>
-                <blockquote class="max-w-2xl p-7 text-4xl text-slate-50 text-left sm:text-4xl font-bold font-serif">
-                  <ul style="list-style-type:square; padding-bottom:10px;">
-                    <li>Wake up</li>
-                    <dd class="sm:text-right">             - at 7 am</dd>
-                    <li>Get ready</li>
-                    <dd class="sm:text-right">             - before 8 am</dd>
-                    <li>Go to class</li>
-                    <li>Do homework</li>
-                    <li>Sleep</li>
-                    <dd class="sm:text-right">             - before 12 am</dd>
-                  </ul>
-                </blockquote>
-             </article>
-        </section>
-    </main>
-   
+    </div>
 
-  </body>
+    <script>
+       window.list = [];
+        let deletes = 0;
+        display();
+
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup', (evt) => {
+            if (evt.key == "Enter") {
+                enter();
+            }
+        });
+        document.getElementById("button").addEventListener('click', enter);
+        document.getElementById("deletebtn").addEventListener('click', del);
+        document.getElementById("savebtn").addEventListener('click', save);
+        document.getElementById("clearbtn").addEventListener('click', clear);
+        function enter() {
+            let mytodo = {
+                name: input.value,
+                id: Math.random()
+            }
+            if ((mytodo.name).length != 0) {
+                list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        }
+
+        function view() {
+            let container = document.getElementById('list');
+
+            let tasksToShow = deletes == 1 ? list.filter(todo => !todo.completed) : list;
+            console.log(tasksToShow);
+            let items = tasksToShow.map(todo => {
+                if (complete != true) {
+                    return `
+                        <li id="${todo.id}" ondblclick="onedit('${todo.id}')" >
+              <span style="margin-left:40px;"class="${todo.completed ? 'completed' : ''} ">${todo.name}</span>
+              <input type="checkbox" onchange="toggleComplete('${todo.id}')" ${todo.completed ? 'checked' : ''}>
+            </li>`
+                }
+            });
+            console.log(items);
+            container.innerHTML = items.join('');
+            save();
+
+        }
+
+        function onedit(id) {
+            let index = list.findIndex(item => item.id == id);
+            let todo = list.find(item => item.id == id);
+            let item = document.getElementById(id);
+            item.innerHTML = `<input id="myedit" type="text" value="${todo.name}">`;
+            let myedit = document.getElementById('myedit');
+            myedit.addEventListener('keyup', (evt) => {
+                if (evt.key == 'Enter') {
+                    let inp = myedit.value;
+                    let mytodo = {
+                        name: inp,
+                        id: index
+                    }
+                    if ((mytodo.name).length != 0) {
+                        list[index] = mytodo;
+                        view();
+                    }
+                }
+            });
+        }
+
+        function complete(id) {
+            let contain = document.getElementById('list');
+            let items = list.map(todo => {
+                return true;
+            });
+        }
+
+        function toggleComplete(id) {
+            let task = list.find(item => item.id == id);
+            task.completed = !task.completed;
+            view();
+        }
+
+        function completeSelected() {
+            list.forEach(task => {
+                if (!task.completed) {
+                    task.completed = true;
+                }
+            });
+            view(task);
+        }
+
+        function del() {
+            list = list.filter(todo => !todo.completed);
+            deletes = 1;
+            view();
+            deletes = 0;
+        }
+
+
+
+        function save() {
+            console.log(window.list);
+            localStorage.setItem('list', JSON.stringify(window.list));
+        }
+
+        function display() {
+
+            const list = JSON.parse(localStorage.getItem('list')) || [];
+
+            window.list = list;
+            view();
+        }
+
+        function clear() {
+            localStorage.clear();
+            console.log(list)
+
+        }
+    </script>
+</body>
+
 </html>
