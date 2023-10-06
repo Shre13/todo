@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todos</title>
+    <style>
+        table,
+        td,
+        th {
+            border: 1px solid;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        h1 {
+            color: rgb(210, 100, 100);
+            text-align: center;
+            font-size: xx-large;
+            width: 80%;
+            font-size: 100px;
+            font-weight: 100;
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0;
+            transition: opacity 2s;
+        }
+        
+        body {
+            background-color: rgb(246, 235, 224);
+            padding-left: 300px;
+        }
+        
+        .div1 {
+            background-color: rgb(231, 226, 222);
+            padding: 40px 400px;
+            font-size: 60px;
+            width: 100px;
+            height: 800px;
+            border: 1px solid rgb(210, 100, 100);
+            align-items: left;
+            /*border: 3px rgb(213, 163, 102);*/
+        }
+        
+        input {
+            padding: 10px 168px;
+            padding-right: -100%;
+            width: fit-content;
+            align-items: left;
+        }
+        
+        ul {
+            list-style-type: circle;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>todos</h1>
+    <div class="div1">
+        <table>
+            <tr>
+                <input id="myinput" type="text">
+                <button class="button" id="button" onclick="enter">Enter</button>
+
+                <button class="button" id="deletebtn" onclick="del">Delete</button>
+
+                <button class="button" id="savebtn">Save</button>
+
+                <button class="button" id="clearbtn" onclick="clear">Clear</button>
+
+                <div id="myEdit"></div>
+
+                <ul id="list"></ul>
+    </div>
+    </tr>
+    </table>
+    ></div>
+
+    <script>
+        window.list = [];
+        let deletes = 0;
+        display();
+
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup', (evt) => {
+            if (evt.key == "Enter") {
+                enter();
+            }
+        });
+        document.getElementById("button").addEventListener('click', enter);
+        document.getElementById("deletebtn").addEventListener('click', del);
+        document.getElementById("savebtn").addEventListener('click', save);
+        document.getElementById("clearbtn").addEventListener('click', clear)
+
+        function enter() {
+            let mytodo = {
+                name: input.value,
+                id: Math.random()
+            }
+            if ((mytodo.name).length != 0) {
+                list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        }
+
+        function view() {
+            let container = document.getElementById('list');
+
+            let tasksToShow = deletes == 1 ? list.filter(todo => !todo.completed) : list;
+            console.log(tasksToShow);
+            let items = tasksToShow.map(todo => {
+                if (complete != true) {
+                    return `
+                        <li id="${todo.id}" ondblclick="onedit('${todo.id}')">
+              <span class="${todo.completed ? 'completed' : ''} ">${todo.name}</span>
+              <input type="checkbox" style="margin-left:40px" onchange="toggleComplete('${todo.id}')" ${todo.completed ? 'checked' : ''}>
+            </li>`
+                }
+            });
+            console.log(items);
+            container.innerHTML = items.join('');
+            save();
+
+        }
+
+        function onedit(id) {
+            let index = list.findIndex(item => item.id == id);
+            let todo = list.find(item => item.id == id);
+            let item = document.getElementById(id);
+            item.innerHTML = `<input id="myedit" type="text" value="${todo.name}">`;
+            let myedit = document.getElementById('myedit');
+            myedit.addEventListener('keyup', (evt) => {
+                if (evt.key == 'Enter') {
+                    let inp = myedit.value;
+                    let mytodo = {
+                        name: inp,
+                        id: index
+                    }
+                    if ((mytodo.name).length != 0) {
+                        list[index] = mytodo;
+                        view();
+                    }
+                }
+            });
+        }
+
+        function complete(id) {
+            let contain = document.getElementById('list');
+            let items = list.map(todo => {
+                return true;
+            });
+        }
+
+        function toggleComplete(id) {
+            let task = list.find(item => item.id == id);
+            task.completed = !task.completed;
+            view();
+        }
+
+        function completeSelected() {
+            list.forEach(task => {
+                if (!task.completed) {
+                    task.completed = true;
+                }
+            });
+            view(task);
+        }
+
+        function del() {
+            list = list.filter(todo => !todo.completed);
+            deletes = 1;
+            view();
+            deletes = 0;
+        }
+
+
+
+        function save() {
+            console.log(window.list);
+            localStorage.setItem('list', JSON.stringify(window.list));
+        }
+
+        function display() {
+
+            const list = JSON.parse(localStorage.getItem('list')) || [];
+
+            window.list = list;
+            view();
+        }
+
+        function clear() {
+            localStorage.clear();
+            console.log(list)
+
+        }
+    </script>
+</body>
+
+</html>
