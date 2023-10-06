@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TO DO</title>
+  <link rel="stylesheet" href="../dist/output.css" />
+  <style>
+  button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding:2px 5px;
+  text-align: center;
+  text-decoration:none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  padding-inline-end:8px;
+}
+ul{
+  color: rgb(200,0,0);
+  padding: 20px 500px;
+  text-align:center;
+  font-size: xx-large;
+  font-family: Verdana;
+  list-style-type: decimal;
+  width: max-content;
+  }   
+input{
+    color :black;
+    font-size: xx-large;
+    padding:4px 10px;
+}
+p{
+  width: max-content;
+  color:white;
+  font-size:xx-large;
+  padding-top: 10px;
+  padding: 30px 00px;
+}
+.completed {
+      text-decoration: line-through;
+      color: green;
+      font-size: xx-large;
+    }
+#myEdit{
+  width: 150px;
+  font-size: xx-large;
+  padding: 4px 10px;
+}
+  </style>
+</head>
+<body class="max-h-screen max-w-screen-2xl bg-slate-50 dark:bg-black dark:text-white ">
+      <header class="bg-teal-700 text-white sticky top-0 z-10">
+      <section class="  flex justify-between items-center">
+        <h1 class="text-3xl font-medium">
+          <a href="#hero">📝TO DO LIST</a>
+        </h1>
+        <div>
+          <button
+            id="mobile-open-button"
+            class="text-3xl sm:hidden focus:outline-none"
+          >
+            &#9776;
+          </button>
+          <nav class="hidden sm:block space-x-8 text-xl aria-label='main'">
+            <a href="#testimonials" class="hover:opacity-90">Testimonials</a>
+            <a href="#contacts" class="hover:opacity-90">Contact Us</a>
+          </nav>
+        </div>
+      </section>
+    </header>
+    <main class="max-w-10xl mx-auto">
+        <section id="hero" class="max-h-lg flex flex-col-reverse justify sm:flex-row p-8 items left gap-6 mb-0">
+             <article class="sm:w-1/2">
+  
+  <input id="myinput" type="text">
+
+  <button class="button" id="button" onclick="btn()">Save</button>
+
+  <button class="button" id="clearbtn" onclick="Clearbutton()">Clear</button>
+
+  <div id="myEdit"></div>
+
+  <p>Tasks :</p> 
+  
+                
+  <ul id="list"> </ul>
+             </article>
+        </section>
+    </main>
+
+  <script>
+    let list=[];
+        let clr=0;
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup',(evt) =>{
+            if(evt.key=="Enter"){
+               enter();
+            }
+            });
+        function btn(){
+            document.getElementById("button").addEventListener('click',enter);
+        }
+        function Clearbutton(){
+          document.getElementById("clearbtn").addEventListener('click',clear);
+        }
+        function enter(){
+            let mytodo = {name: input.value, id: Math.random()}
+            if((mytodo.name).length!=0)
+            {
+              list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        }
+        function view(){
+            let container=document.getElementById('list');
+            let tasksToShow = clr == 1? list.filter(todo => !todo.completed) : list;
+            let items= tasksToShow.map(todo=>{
+              if (complete!=true){
+                return  `
+                <li id="${todo.id}" ondblclick="onedit('${todo.id}')">
+      <span class="${todo.completed ? 'completed' : ''}">${todo.name}</span>
+      <input type="checkbox" onchange="toggleComplete('${todo.id}')" ${todo.completed ? 'checked' : ''}>
+    </li>`
+              }}); 
+        console.log(items);
+        container.innerHTML = items.join('');
+        }
+        function onedit(id){
+            let index = list.findIndex(item => item.id == id);
+            let todo = list.find(item => item.id == id);
+            let item = document.getElementById(id);
+            item.innerHTML = `<input id="myedit" type="text" value="${todo.name}">`;
+            let myedit = document.getElementById('myedit');
+            myedit.addEventListener('keyup', (evt)=>{
+                if (evt.key == 'Enter') {
+                let inp=myedit.value;
+                let mytodo = {name: inp, id:index}
+                if((mytodo.name).length!=0){
+                list[index] = mytodo;
+                view();}
+                }
+            });
+        }
+        function complete(id){
+            let contain = document.getElementById('list');
+            let items = list.map(todo => {
+        return true;
+      });
+    }
+    function toggleComplete(id) {
+      let task = list.find(item => item.id == id);
+      task.completed = !task.completed;
+      view();
+    }
+
+    function completeSelected() {
+      list.forEach(task => {
+        if (!task.completed) {
+          task.completed = true;
+        }
+      });
+      view(task);
+    }
+    function clear(){
+      list = list.filter(todo => !todo.completed);
+          clr=1;
+          view();
+          clr=0;
+    }
+      </script> 
+    
+</body>
+</html>

@@ -2,17 +2,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Todos</title>
-    <style>
-
-    </style>
+    <title>My Todo App</title>
 </head>
 <body>
     <h1>My Todo App</h1>
-    <h2>Hello World</h2>
+
+    <input id="myinput" type="text">
+
+    <ul id="list">
+
+    </ul>
 
     <script>
-        console.log("Hello Shreya");
-    </script>
+
+       let list = [];
+
+        let input = document.getElementById('myinput');
+
+        input.addEventListener('keyup', (evt) => {
+            //console.log(evt.key);
+            if (evt.key == 'Enter') {
+                let mytodo = {name: input.value, id: Math.random()}
+                list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        });
+
+        function view(){
+            let container = document.getElementById('list');
+            let items = list.map(todo => {
+                return `
+                    <li id="${todo.id}" ondblclick="onedit(${todo.id})">
+                        ${todo.name}
+                    </li>
+                `
+            });
+            
+            console.log(items);
+            container.innerHTML = items.join('');
+
+        }
+
+        function onedit(id){
+            console.log(id);
+            let todo = list.find(item => item.id == id);
+            console.log(todo);
+            let index = list.findIndex(item => item.id == id);
+            let item = document.getElementById(id);
+            item.innerHTML = `<input id="myedit" type="text" value="${todo.name}">`;
+            let myedit = document.getElementById('myedit');
+            myedit.addEventListener('keyup', (evt)=>{
+                if (evt.key == 'Enter') {
+                let inp=myedit.value;
+                let mytodo = {name: inp, id:index}
+                list[index] = mytodo;
+                //list.push(index);
+                view();
+                }
+            });
+            
+}
+        
+
+</script>
 </body>
 </html>

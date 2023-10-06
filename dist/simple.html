@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TO DO</title>
+    <link rel="stylesheet" href="../dist/output.css" />
+    <style>
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 5px 6px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 15px;
+            margin: 4px 2px;
+            cursor: pointer;
+            padding-inline-end: 8px;
+            margin-left: 10px;
+        }
+        
+        body {
+            background-color: black;
+            padding: 90px 480px;
+            justify-content: center;
+            align-items: center;
+            width: max-content;
+            font-family: monospace;
+        }
+        
+        h1 {
+            padding: 30px 220px;
+            justify-content: center;
+            align-items: center;
+            width: max-content;
+            color: white;
+            font-size: xxx-large;
+            text-decoration: underline;
+        }
+        
+        ul {
+            color: rgb(227, 9, 9);
+            padding-top: 25px;
+            text-align: center;
+            font-size: xx-large;
+            font-family: Verdana;
+            list-style-type: decimal;
+        }
+        
+        li {
+            padding-top: 25px;
+        }
+        
+        input {
+            color: black;
+            background-color: cadetblue;
+            font-size: xx-large;
+            padding: 4px 10px;
+        }
+        
+        p {
+            color: white;
+            font-size: xx-large;
+            padding-top: 10px;
+        }
+        
+        .completed {
+            text-decoration: line-through;
+            color: green;
+            font-size: xx-large;
+        }
+        
+        #myEdit {
+            width: 150px;
+            font-size: xx-large;
+            padding: 4px 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>TO DO:</h1>
+
+    <input id="myinput" type="text">
+    <button class="button" id="button" onclick="enter">Enter</button>
+
+    <button class="button" id="deletebtn" onclick="del">Delete</button>
+
+    <button class="button" id="savebtn">Save</button>
+
+    <button class="button" id="clearbtn" onclick="clear">Clear</button>
+
+    <div id="myEdit"></div>
+
+    <p>Tasks :</p>
+
+    <ul id="list"></ul>
+
+    <script>
+        window.list = [];
+        let deletes = 0;
+        display();
+
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup', (evt) => {
+            if (evt.key == "Enter") {
+                enter();
+            }
+        });
+        document.getElementById("button").addEventListener('click', enter);
+        document.getElementById("deletebtn").addEventListener('click', del);
+        document.getElementById("savebtn").addEventListener('click', save);
+        document.getElementById("clearbtn").addEventListener('click', clear)
+
+        function enter() {
+            let mytodo = {
+                name: input.value,
+                id: Math.random()
+            }
+            if ((mytodo.name).length != 0) {
+                list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        }
+
+        function view() {
+            let container = document.getElementById('list');
+
+            let tasksToShow = deletes == 1 ? list.filter(todo => !todo.completed) : list;
+            console.log(tasksToShow);
+            let items = tasksToShow.map(todo => {
+                if (complete != true) {
+                    return `
+                        <li id="${todo.id}" ondblclick="onedit('${todo.id}')">
+              <span class="${todo.completed ? 'completed' : ''} ">${todo.name}</span>
+              <input type="checkbox" style="margin-left:40px" onchange="toggleComplete('${todo.id}')" ${todo.completed ? 'checked' : ''}>
+            </li>`
+                }
+            });
+            console.log(items);
+            container.innerHTML = items.join('');
+            save();
+
+        }
+
+        function onedit(id) {
+            let index = list.findIndex(item => item.id == id);
+            let todo = list.find(item => item.id == id);
+            let item = document.getElementById(id);
+            item.innerHTML = `<input id="myedit" type="text" value="${todo.name}">`;
+            let myedit = document.getElementById('myedit');
+            myedit.addEventListener('keyup', (evt) => {
+                if (evt.key == 'Enter') {
+                    let inp = myedit.value;
+                    let mytodo = {
+                        name: inp,
+                        id: index
+                    }
+                    if ((mytodo.name).length != 0) {
+                        list[index] = mytodo;
+                        view();
+                    }
+                }
+            });
+        }
+
+        function complete(id) {
+            let contain = document.getElementById('list');
+            let items = list.map(todo => {
+                return true;
+            });
+        }
+
+        function toggleComplete(id) {
+            let task = list.find(item => item.id == id);
+            task.completed = !task.completed;
+            view();
+        }
+
+        function completeSelected() {
+            list.forEach(task => {
+                if (!task.completed) {
+                    task.completed = true;
+                }
+            });
+            view(task);
+        }
+
+        function del() {
+            list = list.filter(todo => !todo.completed);
+            deletes = 1;
+            view();
+            deletes = 0;
+        }
+
+
+
+        function save() {
+            console.log(window.list);
+            localStorage.setItem('list', JSON.stringify(window.list));
+        }
+
+        function display() {
+
+            const list = JSON.parse(localStorage.getItem('list')) || [];
+
+            window.list = list;
+            view();
+        }
+
+        function clear() {
+            localStorage.clear();
+            console.log(list)
+
+        }
+    </script>
+</body>
+
+</html>

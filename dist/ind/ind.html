@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="script" href="./code.js">
+</head>
+
+<body>
+    <div class="top">
+        <div class="one">📝 TO DO </div>
+        <div>HOME</div>
+        <div>CONTACT US</div>
+        <div>☰</div>
+    </div>
+    <div class="dm"><button class="button" onclick="darkmode()">🌜</button></div>
+    <h1>TO DO:</h1>
+    <div class="div1">
+        <div><input id="myinput" type="text"></div>
+        <div id="myEdit"></div>
+        <ul id="list"></ul>
+        <div class="container">
+            <div><button class="button" id="button" onclick="enter">Enter</button></div>
+            <div><button class="button" id="deletebtn" onclick="del">Delete</button></div>
+            <div><button class="button" id="savebtn">Save</button></div>
+            <div><button class="button" id="clearbtn" onclick="clear">Clear</button></div>
+
+        </div>
+    </div>
+    <script>
+        window.list = [];
+        let deletes = 0;
+        display();
+
+        let input = document.getElementById("myinput");
+        input.addEventListener('keyup', (evt) => {
+            if (evt.key == "Enter") {
+                enter();
+            }
+        });
+        document.getElementById("button").addEventListener('click', enter);
+        document.getElementById("deletebtn").addEventListener('click', del);
+        document.getElementById("savebtn").addEventListener('click', save);
+        document.getElementById("clearbtn").addEventListener('click', clear);
+
+        function enter() {
+            let mytodo = {
+                name: input.value,
+                id: Math.random()
+            }
+            if (mytodo.name.length != 0) {
+                list.push(mytodo);
+                input.value = '';
+                view();
+            }
+        }
+
+        function view() {
+            let container = document.getElementById('list');
+
+            let tasksToShow = deletes == 1 ? list.filter(todo => !todo.completed) : list;
+            console.log(tasksToShow);
+            let items = tasksToShow.map(todo => {
+                if (complete != true) {
+                    return `
+                        <li id="${todo.id}" ondblclick="onedit('${todo.id}')" >
+                             <span class="${todo.completed ? 'completed' : ''} ">${todo.name}</span>
+                             <input type="checkbox" onchange="toggleComplete('${todo.id}')" ${todo.completed ? 'checked' : ''}>
+                         </li>`
+                }
+            });
+            console.log(items);
+            container.innerHTML = items.join('');
+            save();
+
+        }
+
+        function onedit(id) {
+            let index = list.findIndex(item => item.id == id);
+            let todo = list.find(item => item.id == id);
+            let item = document.getElementById(id);
+            let newInput = document.createElement('input');
+            newInput.type = 'text';
+            newInput.value = todo.name;
+            item.innerHTML = '';
+            item.appendChild(newInput);
+
+            newInput.focus();
+
+            newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+
+            newInput.addEventListener('keyup', (evt) => {
+                if (evt.key == 'Enter') {
+                    let inp = newInput.value;
+                    let mytodo = {
+                        name: inp,
+                        id: id
+                    };
+                    if (mytodo.name.length != 0) {
+                        list[index] = mytodo;
+                        view();
+                    }
+                }
+            });
+        }
+
+        function complete(id) {
+            let contain = document.getElementById('list');
+            let items = list.map(todo => {
+                return true;
+            });
+        }
+
+        function toggleComplete(id) {
+            let task = list.find(item => item.id == id);
+            task.completed = !task.completed;
+            view();
+        }
+
+        function completeSelected() {
+            list.forEach(task => {
+                if (!task.completed) {
+                    task.completed = true;
+                }
+            });
+            view(task);
+        }
+
+        function del() {
+            list = list.filter(todo => !todo.completed);
+            deletes = 1;
+            view();
+            deletes = 0;
+        }
+
+
+
+        function save() {
+            console.log(window.list);
+            localStorage.setItem('list', JSON.stringify(window.list));
+            localStorage.setItem('theme', document.documentElement.getAttribute('data-theme'));
+        }
+
+        function display() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            const listData = JSON.parse(localStorage.getItem('list')) || [];
+            window.list = listData;
+            view();
+        }
+
+        function clear() {
+            localStorage.clear();
+            console.log(list)
+
+        }
+
+        function darkmode() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+    </script>
+</body>
+
+</html>
